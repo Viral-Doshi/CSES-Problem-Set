@@ -30,16 +30,26 @@ struct mhash {
 vector <ll> arr;
 ll n, tot = 0, sum = 0, ans = 10000000000;
 
-void recur(int x){
+// void recur(int x){
+
+//     if (x == n){
+//         ans = min(ans, abs(tot - 2*sum));
+//         return;
+//     }
+//     recur(x+1);
+//     sum += arr[x];
+//     recur(x+1);
+//     sum -= arr[x];
+// }
+
+void recur(int x, ll sum){
 
     if (x == n){
         ans = min(ans, abs(tot - 2*sum));
         return;
     }
-    recur(x+1);
-    sum += arr[x];
-    recur(x+1);
-    sum -= arr[x];
+    recur(x+1, sum);
+    recur(x+1, sum + arr[x]);
 }
 
 int main(){
@@ -53,7 +63,7 @@ int main(){
         arr.push_back(temp);
     }
     // fshow(arr);
-    recur(0);
+    recur(0, 0);
     cout << ans << '\n';
 }
 

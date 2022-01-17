@@ -34,18 +34,14 @@ int main(){
     ll n;
     cin >> n;
     ll xoor = 0;
-    if (n%4 == 0){
+    if (n%4 == 0)
         xoor = n;
-    }
-    else if (n%4 == 1){
+    else if (n%4 == 1)
         xoor = 1;
-    }
-    else if (n%4 == 2){
+    else if (n%4 == 2)
         xoor = n+1;
-    }
-    else{
+    else
         xoor = 0;
-    }
     for (int i=0; i < n-1; i++){
         ll temp;
         cin >> temp;

@@ -28,30 +28,37 @@ struct mhash {
     }
 };
 
-vector<string> board, bd;
+vector<string> board;
 int num = 0;
+vector<int> rcheck(8,0);
+vector<int> d1check(15,0);
+vector<int> d2check(15,0);
 
-bool isSafe(int row, int col){
-    if (board[row][col] == '*')
+// bool isSafe(int row, int col){
+//     if (board[row][col] == '*')
+//         return false;
+//     for (int i = 0; i < col; i++){
+//         if (board[row][i] == 'Q')
+//             return false;
+//     }
+//     int i=row, j=col;
+//     for (; i>=0 && j>=0; i--, j--){
+//         if (board[i][j] == 'Q')
+//             return false;
+//     }
+//     i= row;
+//     j= col;
+//     for (; i<=7 && j>=0; i++, j--){
+//         if (board[i][j] == 'Q')
+//             return false;
+//     }
+//     return true;
+// }
+
+bool isSafe_O1(int row, int col){
+    if (board[row][col] == '*' || rcheck[row] == 1 || d1check[row+col] || d2check[col - row + 7])
         return false;
-    // horizontal
-    for (int i = 0; i < col; i++){
-        if (board[row][i] == 'Q')
-            return false;
-    }
-    // diagonally-up
-    int i=row, j=col;
-    for (; i>=0 && j>=0; i--, j--){
-        if (board[i][j] == 'Q')
-            return false;
-    }
-    // diagonally-down
-    i= row;
-    j= col;
-    for (; i<=7 && j>=0; i++, j--){
-        if (board[i][j] == 'Q')
-            return false;
-    }
+    
     return true;
 }
 
@@ -63,10 +70,17 @@ void QueenPos(int col){
         return;
     }
     for (int i=0; i<8; i++){
-        if (isSafe(i,col)){
+        if (isSafe_O1(i,col)){
             board[i][col] = 'Q';
+            rcheck[i] = 1;
+            d1check[i+col] = 1;
+            d2check[col - i + 7] = 1;
+
             QueenPos(col + 1);
             board[i][col] = '.';
+            rcheck[i] = 0;
+            d1check[i+col] = 0;
+            d2check[col - i + 7] = 0;
         }
     }
 }
@@ -80,7 +94,6 @@ int main(){
         cin >> temp;
         board.push_back(temp);
     }
-    bd = board;
     QueenPos(0);
     cout << num;
     return 0;
