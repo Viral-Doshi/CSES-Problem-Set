@@ -31,8 +31,43 @@ string s;
 int ans = 0, posx = 0, posy = 0;
 vector<vector<char>> visited(7, vector<char>(7,false));
 
+bool is_unreachable(int px, int py){
+    if (px < 0 || px > 6 || py < 0 || py > 6 || visited[px][py])
+        return true;
+    return false;
+}
+bool is_goal(int px, int py){
+    if (px == 0 && py == 6)
+        return true;
+    return false;
+}
+bool check_splits(int px, int py){
+    if (is_unreachable(px, py+1) && is_unreachable(px, py-1) && !is_unreachable(px+1, py) && !is_unreachable(px-1, py))
+        return true;
+    if (!is_unreachable(px, py+1) && !is_unreachable(px, py-1) && is_unreachable(px+1, py) && is_unreachable(px-1, py))
+        return true;
+    return false;
+}
+bool check_void(int px, int py){
+    int cnt = 0;
+    if (is_unreachable(px,py) || is_goal(px,py))
+        return false;
+    if (is_unreachable(px-1,py))
+        cnt ++;
+    if (is_unreachable(px+1,py))
+        cnt ++;
+    if (is_unreachable(px,py-1))
+        cnt ++;
+    if (is_unreachable(px,py+1))
+        cnt ++;
+
+    if (cnt == 3 ||cnt == 4)
+        return true;
+    return false;
+}
+
 void findPaths(int i, int posx, int posy){
-    if (posx < 0 || posx > 6 || posy < 0 || posy > 6 || visited[posx][posy])
+    if (is_unreachable(posx, posy))
         return;
     if (i == 48){
         if (posx == 0 && posy == 6){
@@ -46,7 +81,11 @@ void findPaths(int i, int posx, int posy){
     if (posx + 6 -posy > 48 - i){
         return;
     }
-
+    if (check_void(posx-1, posy-1) || check_void(posx-1, posy+1) ||check_void(posx+1, posy-1) ||check_void(posx+1, posy+1)){
+        return;
+    }
+    if (check_splits(posx, posy))
+        return;
     visited[posx][posy] = true;
 
     if (s[i] != '?'){
